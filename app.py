@@ -91,6 +91,7 @@ app.layout = html.Div([
             html.Label("w11^2"), dcc.Slider(id='w112', min=-10, max=10, step=0.001, value=1),
             html.Label("w12^2"), dcc.Slider(id='w212', min=-10, max=10, step=0.001, value=1),
         ], style={'width':'30%', 'display':'inline-block', 'vertical-align':'middle'}),
+        ])
     ])
 ])
 
