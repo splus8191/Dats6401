@@ -9,7 +9,6 @@ from scipy.fft import fft
 import random
 
 app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
-server = app.server
 
 url = "https://raw.githubusercontent.com/rjafari979/Information-Visualization-Data-Analytics-Dataset-/main/CONVENIENT_global_confirmed_cases.csv"
 df = pd.read_csv(url)
@@ -23,20 +22,20 @@ x = [i/250 - 2 for i in range(1000)]
 
 app.layout = html.Div([
     dcc.Tabs([
-        dcc.Tab(label='Q1 - COVID Cases', children=[
-            html.H1("Global Confirmed COVID-19 Cases"),
-            html.Label("Pick the country Name"),
+        dcc.Tab(label='Question 1', children=[
+            html.H1("Covid Cases per Country"),
+            html.Label("Pick the country name"),
             dcc.Dropdown(id='dd', options=countries, value=countries, multi=True),
             dcc.Graph(id='covid-graph')
         ]),
-        dcc.Tab(label='Q2 - Quadratic', children=[
+        dcc.Tab(label='Question 2', children=[
             html.H1("f(x) = ax^2 + bx + c"),
             html.Label("a"), dcc.Slider(id='a', min=-10, max=10, step=0.5, value=1),
             html.Label("b"), dcc.Slider(id='b', min=-10, max=10, step=0.5, value=0),
             html.Label("c"), dcc.Slider(id='c', min=-10, max=10, step=0.5, value=0),
             dcc.Graph(id='quad-graph')
         ]),
-        dcc.Tab(label='Q3 - Calculator', children=[
+        dcc.Tab(label='Question 3', children=[
             html.H1("Calculator"),
             html.Label("Operation"),
             dcc.Dropdown(id='calc-op', options=[
@@ -51,13 +50,13 @@ app.layout = html.Div([
             html.Label("b"), dcc.Input(id='input-b', type='number', value=1),
             html.Div(id='calc-res', style={'fontSize': '24px', 'marginTop': '20px'})
         ]),
-        dcc.Tab(label='Q4 - Polynomial', children=[
+        dcc.Tab(label='Question 4', children=[
             html.H1("Polynomial Plotter"),
             html.Label("Please enter the polynomial order"),
             dcc.Input(id='poly-order', type='number', value=2),
             dcc.Graph(id='poly-graph')
         ]),
-        dcc.Tab(label='Q5 - FFT', children=[
+        dcc.Tab(label='Question 5', children=[
             html.Label("Please enter the number of sinusoidal cycle"),
             dcc.Input(id='cycles', type='number', value=4),
             html.Label("Please enter the mean of the white noise"),
@@ -70,8 +69,8 @@ app.layout = html.Div([
             html.H3("The fast fourier transform of above generated data"),
             dcc.Graph(id='fft-graph')
         ]),
-        dcc.Tab(label='Q6 - Neural Net', children=[
-            html.H1("Two-Layer Neural Network"),
+        dcc.Tab(label='Question 6', children=[
+            html.H1("Two Layer Neural Network"),
             html.Img(src='/assets/nn.png', style={'width': '40%', 'display': 'block', 'margin': 'auto'}),
             html.Div([
                 html.Div([
