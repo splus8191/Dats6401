@@ -1,9 +1,9 @@
-from dash import Dash
 import dash as html
 import dash as dcc
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
+from dash import Dash, html, dcc
 import math
 from scipy.fft import fft
 import random
