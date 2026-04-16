@@ -119,15 +119,12 @@ def update_poly(n):
     [Input('cycles', 'value'), Input('noise-mean', 'value'), Input('noise-std', 'value'), Input('samples', 'value')]
 )
 def update_fft(c, m, s, n):
-    if None in [c, m, s, n]: return dash.no_update, dash.no_update
-    t = np.linspace(-np.pi, np.pi, int(n))
-    noise = np.random.normal(m, s, int(n))
-    y = np.sin(c * t) + noise
-    fig1 = px.line(x=t, y=y, labels={'x': 'x', 'y': 'y'})
-    
-    y_fft = np.abs(fft(y))
-    fig2 = px.line(x=t, y=y_fft, labels={'x': 'x', 'y': 'y'})
-    return fig1, fig2
+    if None in [c, m, s, n]: return {}, {}
+    import random
+    n = int(n)
+    t = [math.pi * (2*i/(n-1) - 1) for i in range(n)]
+    y = [math.sin(c * t[i]) + random.gauss(m, s) for i in range(n)]
+    return px.line(x=t, y=y), px.line(x=t, y=[abs(v) for v in fft(y)])
 
 if __name__ == '__main__':
     app.run(debug=True)
