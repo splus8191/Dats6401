@@ -6,6 +6,7 @@ import pandas as pd
 from dash import Dash, html, dcc
 import math
 from scipy.fft import fft
+import random
 
 app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 server = app.server
@@ -128,8 +129,9 @@ def update_poly(n):
     return px.line(x=x, y=[i**n for i in x], labels={'x': 'x', 'y': f'x^{n}'})
 
 @app.callback(
-    Output('sig-graph', 'figure'), Output('fft-graph', 'figure'),
-    Input('cycles', 'value'), Input('noise-mean', 'value'), Input('noise-std', 'value'), Input('samples', 'value'))
+    [Output('sig-graph', 'figure'), Output('fft-graph', 'figure')],
+    [Input('cycles', 'value'), Input('noise-mean', 'value'), Input('noise-std', 'value'), Input('samples', 'value')]
+)
 def update_fft(c, m, s, n):
     if None in [c, m, s, n]: return {}, {}
     n = int(n)
