@@ -73,7 +73,24 @@ app.layout = html.Div([
             dcc.Graph(id='sig-graph'),
             html.H3("The fast fourier transform of above generated data"),
             dcc.Graph(id='fft-graph')
-        ])
+        ]),
+        dcc.Tab(label='Q6 - Neural Net', children=[
+            html.H1("Two-Layer Neural Network"),
+            html.Img(src='/assets/nn.png', style={'width':'40%', 'display':'block', 'margin':'auto'}),
+            html.Div([
+            html.Div([
+            html.Label("b1^1"), dcc.Slider(id='b11', min=-10, max=10, step=0.001, value=0),
+            html.Label("b1^2"), dcc.Slider(id='b12', min=-10, max=10, step=0.001, value=0),
+            html.Label("w11^1"), dcc.Slider(id='w11', min=-10, max=10, step=0.001, value=1),
+            html.Label("w21^1"), dcc.Slider(id='w211', min=-10, max=10, step=0.001, value=1),
+        ], style={'width':'30%', 'display':'inline-block', 'vertical-align':'middle'}),
+        html.Div([dcc.Graph(id='nn-graph')],
+            style={'width':'40%', 'display':'inline-block', 'vertical-align':'middle'}),
+        html.Div([
+            html.Label("b1^2"),   dcc.Slider(id='b2',   min=-10, max=10, step=0.001, value=0),
+            html.Label("w11^2"), dcc.Slider(id='w112', min=-10, max=10, step=0.001, value=1),
+            html.Label("w12^2"), dcc.Slider(id='w212', min=-10, max=10, step=0.001, value=1),
+        ], style={'width':'30%', 'display':'inline-block', 'vertical-align':'middle'}),
     ])
 ])
 
@@ -125,6 +142,16 @@ def update_fft(c, m, s, n):
     t = [math.pi * (2*i/(n-1) - 1) for i in range(n)]
     y = [math.sin(c * t[i]) + random.gauss(m, s) for i in range(n)]
     return px.line(x=t, y=y), px.line(x=t, y=[abs(v) for v in fft(y)])
+    
+@app.callback(Output('nn-graph','figure'),
+    [Input('b11','value'),Input('b12','value'),Input('w11','value'),Input('w211','value'),
+     Input('b2','value'),Input('w112','value'),Input('w212','value')])
+def update_nn(b11,b12,w11,w211,b2,w112,w212):
+    p = [i/999*10-5 for i in range(1000)]
+    sig = lambda x: 1/(1+math.exp(-x))
+    a2 = [w112*sig(pi*w11+b11) + w212*sig(pi*w211+b12) + b2 for pi in p]
+    return px.line(x=p, y=a2, labels={'x':'p','y':'a²'})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
