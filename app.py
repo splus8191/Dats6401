@@ -113,11 +113,11 @@ def calculate(op, a, b):
         if op == 'mul': return f"Result: {a * b}"
         if op == 'div': return f"Result: {a / b}" if b != 0 else "Error: b ≠ 0"
         if op == 'log':
-            if a > 0 and b > 1: return f"Result: {math.log(a, b)}"
+            if a > 0 and b > 1: return f"Answer: {math.log(a, b)}"
             return "Error: a > 0, b > 1"
         if op == 'root':
-            if a == 0 or b <= 0: return "Error: a ≠ 0, b > 0"
-            if a < 0 and b % 2 == 0: return "Error: b must be odd if a < 0"
+            if a == 0 or b <= 0: return "Not Valid"
+            if a < 0 and b % 2 == 0: return "Not Valid"
             res = abs(a) ** (1 / b)
             return f"Result: {res if a > 0 else -res}"
     except:
