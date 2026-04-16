@@ -63,7 +63,6 @@ app.layout = html.Div([
             dcc.Graph(id='poly-graph')
         ]),
         dcc.Tab(label='Q5 - FFT', children=[
-            html.H1("FFT Analysis"),
             html.Label("Please enter the number of sinusoidal cycle"),
             dcc.Input(id='cycles', type='number', value=4),
             html.Label("Please enter the mean of the white noise"),
@@ -121,18 +120,14 @@ def update_poly(n):
     [Input('cycles', 'value'), Input('noise-mean', 'value'), Input('noise-std', 'value'), Input('samples', 'value')]
 )
 def update_fft(c, m, s, n):
-    c = c if c is not None else 0
-    m = m if m is not None else 0
-    s = s if s is not None else 0
-    n = int(n) if (n is not None and n > 0) else 1000
-    
-    t = np.linspace(-np.pi, np.pi, n)
-    noise = np.random.normal(m, s, n)
+    if None in [c, m, s, n]: return dash.no_update, dash.no_update
+    t = np.linspace(-np.pi, np.pi, int(n))
+    noise = np.random.normal(m, s, int(n))
     y = np.sin(c * t) + noise
+    fig1 = px.line(x=t, y=y, labels={'x': 'x', 'y': 'y'})
     
-    fig1 = px.line(x=t, y=y)
-    fig2 = px.line(x=t, y=np.abs(fft(y)))
-    
+    y_fft = np.abs(fft(y))
+    fig2 = px.line(x=t, y=y_fft, labels={'x': 'x', 'y': 'y'})
     return fig1, fig2
 
 if __name__ == '__main__':
