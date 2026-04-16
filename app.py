@@ -53,6 +53,12 @@ app.layout = html.Div([
             html.Label("a"), dcc.Input(id='input-a', type='number', value=1),
             html.Label("b"), dcc.Input(id='input-b', type='number', value=1),
             html.Div(id='calc-res', style={'fontSize': '24px', 'marginTop': '20px'})
+        ]),
+        dcc.Tab(label='Q4 - Polynomial', children=[
+            html.H1("Polynomial Plotter"),
+            html.Label("Please enter the polynomial order"),
+            dcc.Input(id='poly-order', type='number', value=2),
+            dcc.Graph(id='poly-graph')
         ])
     ])
 ])
@@ -87,6 +93,12 @@ def calculate(op, a, b):
             res = abs(a)**(1/b)
             return f"Result: {res if a > 0 else -res}"
     except: return "Error"
+
+@app.callback(Output('poly-graph', 'figure'), Input('poly-order', 'value'))
+def update_poly(n):
+    if n is None: n = 0
+    y_poly = [i**n for i in x]
+    return px.line(x=x, y=y_poly, labels={'x': 'x', 'y': f'x^{n}'})
 
 if __name__ == '__main__':
     app.run(debug=True)
