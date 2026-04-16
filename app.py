@@ -5,6 +5,8 @@ import plotly.express as px
 import pandas as pd
 from dash import Dash, html, dcc
 import math
+from scipy.fft import fft
+
 
 app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 server = app.server
@@ -59,6 +61,19 @@ app.layout = html.Div([
             html.Label("Please enter the polynomial order"),
             dcc.Input(id='poly-order', type='number', value=2),
             dcc.Graph(id='poly-graph')
+        ]),
+        dcc.Tab(label='Q5 - FFT', children=[
+            html.Label("Please enter the number of sinusoidal cycle"),
+            dcc.Input(id='cycles', type='number', value=4),
+            html.Label("Please enter the mean of the white noise"),
+            dcc.Input(id='noise-mean', type='number', value=0),
+            html.Label("Please enter the standard deviation of the white noise"),
+            dcc.Input(id='noise-std', type='number', value=1),
+            html.Label("Please enter the number of samples"),
+            dcc.Input(id='samples', type='number', value=1000),
+            dcc.Graph(id='sig-graph'),
+            html.H3("The fast fourier transform of above generated data"),
+            dcc.Graph(id='fft-graph')
         ])
     ])
 ])
@@ -99,6 +114,21 @@ def update_poly(n):
     if n is None: n = 0
     y_poly = [i**n for i in x]
     return px.line(x=x, y=y_poly, labels={'x': 'x', 'y': f'x^{n}'})
+
+@app.callback(
+    [Output('sig-graph', 'figure'), Output('fft-graph', 'figure')],
+    [Input('cycles', 'value'), Input('noise-mean', 'value'), Input('noise-std', 'value'), Input('samples', 'value')]
+)
+def update_fft(c, m, s, n):
+    if None in [c, m, s, n]: return dash.no_update, dash.no_update
+    t = np.linspace(-np.pi, np.pi, int(n))
+    noise = np.random.normal(m, s, int(n))
+    y = np.sin(c * t) + noise
+    fig1 = px.line(x=t, y=y, labels={'x': 'x', 'y': 'y'})
+    
+    y_fft = np.abs(fft(y))
+    fig2 = px.line(x=t, y=y_fft, labels={'x': 'x', 'y': 'y'})
+    return fig1, fig2
 
 if __name__ == '__main__':
     app.run(debug=True)
